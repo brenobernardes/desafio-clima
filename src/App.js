@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+// import styled from "styledComponents";
 import axios from "axios";
+import clearSky from "../src/images/clear-sky.jpg";
 
 function App() {
 
   const [weather, setWeather] = useState('');
   const [city, setCity] = useState('');
-  const apiKey = process.env.REACT_APP_API_KEY;
+  const apiKey = "434ffbe7702659b46019c22e25ee8e90";
 
   const apiCall = async (e) => {
       e.preventDefault()
@@ -13,6 +15,7 @@ function App() {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`;
       const req = axios.get(url);
       const res = await req;
+      const climate = res.data.weather[0].description;
       setWeather({
           description: res.data.weather[0].description,
           temp: res.data.main.temp,
@@ -22,8 +25,21 @@ function App() {
           humidity: res.data.main.humidity,
       })
 
+      if (climate == 'clear sky' || 'few clouds') {
+          console.log("teste")
+      } else if (climate == 'scattered clouds' || 'broken clouds') {
+          console.log("teste2")
+      } else if (climate == 'shower rain' || 'rain') {
+        console.log("teste3")
+      } else if (climate == 'thunderstorm') {
+        console.log("teste4")
+      } else if (climate == 'snow') {
+        console.log("teste5")
+      } else if (climate == 'mist') {
+        console.log("teste6")
+      }
+
       setCity(res.data.name)
-      sportForWeather();
 
   }
 
@@ -53,23 +69,24 @@ function App() {
           </div>
       </div>
   }
-  return (<>
+  return (
+    <div>
       <h1>Weather Info</h1>
       <div>
-          <div>
-              <form onSubmit={apiCall}>
-                  <input 
-                  type="text" 
-                  placeholder="city" 
-                  name="location" />
+          
+            <form onSubmit={apiCall}>
+                <input 
+              type="text" 
+              placeholder="city" 
+              name="location" />
 
-                  <button>Search</button>
-              </form>
+              <button>Search</button>
+          </form>
 
-              {weather && <WeatherInfo />}
-          </div>
+          {weather && <WeatherInfo />}
+          
       </div>
-  </>
+    </div>
   )
 }
 
